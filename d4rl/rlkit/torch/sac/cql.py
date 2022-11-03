@@ -234,6 +234,8 @@ class CQLTrainer(TorchTrainer):
         random_actions_tensor = torch.FloatTensor(q2_pred.shape[0] * self.num_random, actions.shape[-1]).uniform_(-1, 1) # .cuda()
         curr_actions_tensor, curr_log_pis = self._get_policy_actions(obs, num_actions=self.num_random, network=self.policy)
         new_curr_actions_tensor, new_log_pis = self._get_policy_actions(next_obs, num_actions=self.num_random, network=self.policy)
+
+        random_actions_tensor = random_actions_tensor.to(curr_actions_tensor.device)
         q1_rand = self._get_tensor_values(obs, random_actions_tensor, network=self.qf1)
         q2_rand = self._get_tensor_values(obs, random_actions_tensor, network=self.qf2)
         q1_curr_actions = self._get_tensor_values(obs, curr_actions_tensor, network=self.qf1)
